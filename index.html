@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Posture+ | Intelligent Ergonomic Telemetry</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=2.1.0">
+</head>
+
+<body>
+
+  <!-- Main Mobile App Frame -->
+  <div class="phone-wrapper">
+    <main class="app-container">
+
+      <!-- Top Symmetrical Header -->
+      <header class="app-header">
+        <div class="user-profile">
+          <div class="avatar-ring">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80"
+              alt="User Profile" class="avatar-img">
+          </div>
+          <div class="user-meta">
+            <span class="user-greeting">Hi, Mohit</span>
+            <span class="session-status" id="livePodSubtitle">Posture+ Active</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- BLE Pod Connection Pill -->
+          <button class="ble-pill connected" id="bleStatusBtn" title="Pod Connected">
+            <span class="pulse-dot"></span>
+            <svg class="battery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+              <line x1="20" y1="10" x2="20" y2="14"></line>
+              <line x1="6" y1="11" x2="12" y2="11" stroke-width="3"></line>
+            </svg>
+            <span class="battery-text" id="batteryPercent">84%</span>
+          </button>
+
+          <!-- Notification Bell -->
+          <button class="icon-pill-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="badge-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Horizontal Scrollable Date Strip -->
+      <section class="date-strip-section" aria-label="Weekly Timeline">
+        <div class="date-strip-label">
+          <span class="current-date-title" id="selectedDateTitle">Thu, 22 Oct &bull; Today</span>
+          <button class="sync-now-btn" id="syncNowBtn" title="Sync Hardware Data">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Sync</span>
+          </button>
+        </div>
+
+        <div class="date-scroll-container" id="dateScrollContainer">
+          <button class="date-pill" data-date="Mon, 19 Oct">
+            <span class="day-name">Mon</span>
+            <span class="day-num">19</span>
+          </button>
+          <button class="date-pill" data-date="Tue, 20 Oct">
+            <span class="day-name">Tue</span>
+            <span class="day-num">20</span>
+          </button>
+          <button class="date-pill" data-date="Wed, 21 Oct">
+            <span class="day-name">Wed</span>
+            <span class="day-num">21</span>
+          </button>
+          <button class="date-pill active" data-date="Thu, 22 Oct">
+            <span class="day-name">Thu</span>
+            <span class="day-num">22</span>
+          </button>
+          <button class="date-pill" data-date="Fri, 23 Oct">
+            <span class="day-name">Fri</span>
+            <span class="day-num">23</span>
+          </button>
+          <button class="date-pill" data-date="Sat, 24 Oct">
+            <span class="day-name">Sat</span>
+            <span class="day-num">24</span>
+          </button>
+          <button class="date-pill" data-date="Sun, 25 Oct">
+            <span class="day-name">Sun</span>
+            <span class="day-num">25</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- View Container (Supports Tab Switching) -->
+      <div id="viewContainer">
+
+        <!-- ================= TAB 1: LIVE COCKPIT ================= -->
+        <div class="tab-view active" id="tabCockpit">
+
+          <!-- Hero Card: Exact Live Posture Status Component from Prototype with Dynamic Ambience -->
+          <article class="hero-posture-card exact-live-posture state-mild" id="heroPostureCard">
+
+            <!-- Top Header: Status Tag + Waveform Icon Box -->
+            <div class="hero-card-header">
+              <div class="status-indicator-tag" id="statusBadgeTag">
+                <span class="status-dot"></span>
+                <div class="status-text-stack">
+                  <span class="status-label" id="statusLabel">MILD SLOUCH</span>
+                  <span class="status-sub" id="statusSubLabel">CLINICAL PRECISION</span>
+                </div>
+              </div>
+
+              <!-- Top-right squircle pulse waveform icon -->
+              <div class="pulse-icon-box" id="pulseIconBox" title="Real-time Biosensor Feed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 7L9 5l-3 7H2" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Central Stage: Large Frosted Circular Plate with Exact Avatar from Screenshot -->
+            <div class="visualizer-stage exact-stage">
+              <div class="avatar-circular-disk" id="avatarCircularDisk">
+                <!-- Dynamic Ambient State Halo Glow behind the character -->
+                <div class="avatar-ambient-halo" id="avatarAmbientHalo"></div>
+
+                <!-- Compact 5-Stage Multi-Frame Stage (Centered with luxury breathing room) -->
+                <div class="character-frames-stage" id="characterFramesStage">
+                  <!-- The 5 Exact Transparent Cutout Frames -->
+                  <img src="assets/avatar_frames/posture_stage_90.png" class="posture-frame frame-90" id="postureFrame90" alt="Upright 90°">
+                  <img src="assets/avatar_frames/posture_stage_80.png" class="posture-frame frame-80" id="postureFrame80" alt="Good Alignment 80°">
+                  <img src="assets/avatar_frames/posture_stage_71.png" class="posture-frame frame-71 active" id="postureFrame71" alt="Mild Slouch 71°">
+                  <img src="assets/avatar_frames/posture_stage_60.png" class="posture-frame frame-60" id="postureFrame60" alt="Slouch Alert 60°">
+                  <img src="assets/avatar_frames/posture_stage_45.png" class="posture-frame frame-45" id="postureFrame45" alt="Severe Slouch 45°">
+                </div>
+              </div>
+
+              <!-- Floating Angle Pill (Bottom Right of Circle) -->
+              <div class="angle-floating-badge exact-angle-badge" id="angleBadge">
+                <span class="badge-title">ANGLE</span>
+                <span class="badge-value" id="currentAngleText">71&deg;</span>
+              </div>
+            </div>
+
+            <!-- Footer: 75% Integrity Score & Diagnostic Tab > Button -->
+            <div class="hero-card-footer exact-footer">
+              <div class="score-block exact-score-block">
+                <span class="score-large" id="alignmentScoreText">75%</span>
+                <span class="score-sub">INTEGRITY SCORE</span>
+              </div>
+
+              <button class="diagnostic-pill-btn" id="diagnosticTabBtn" title="View Detailed Diagnostic Telemetry">
+                <span>DIAGNOSTIC TAB</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+
+          </article>
+
+          <!-- Interactive Angle Controller (Test / Real-Time Simulation) -->
+          <section class="controller-card">
+            <div class="controller-header">
+              <div class="controller-title">
+                <div class="controller-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                  </svg>
+                </div>
+                <div class="controller-text-stack">
+                  <span class="ctrl-main-title">Live Sensor Simulator</span>
+                  <span class="ctrl-sub-title">Test biomechanical states</span>
+                </div>
+              </div>
+              <span class="target-live-pill" id="controllerLiveBadge">BLE Active</span>
+            </div>
+
+            <div class="slider-wrapper">
+              <div class="slider-track-container">
+                <input type="range" min="45" max="90" value="71" class="angle-slider" id="angleSlider">
+              </div>
+              <div class="slider-ticks">
+                <span class="tick-slouch">45&deg; Slouch</span>
+                <span class="slider-current-val" id="sliderValDisplay">71&deg;</span>
+                <span class="tick-upright">90&deg; Upright</span>
+              </div>
+            </div>
+
+            <!-- Quick Presets with color-coded dot badges -->
+            <div class="presets-row">
+              <button class="preset-pill" data-angle="90">
+                <span class="preset-dot dot-good"></span>
+                <span>90&deg; Ideal</span>
+              </button>
+              <button class="preset-pill" data-angle="80">
+                <span class="preset-dot dot-good"></span>
+                <span>80&deg; Good</span>
+              </button>
+              <button class="preset-pill active" data-angle="71">
+                <span class="preset-dot dot-mild"></span>
+                <span>71&deg; Mild</span>
+              </button>
+              <button class="preset-pill" data-angle="55">
+                <span class="preset-dot dot-poor"></span>
+                <span>55&deg; Slouch</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- 2x2 Telemetric Metrics Grid (Tactile Symmetrical Wellness Cards) -->
+          <section class="metrics-grid">
+
+            <!-- Card 1: Spinal Stress Load -->
+            <div class="metric-card" id="cardSpinalLoad">
+              <div class="metric-top">
+                <div class="metric-icon-squircle icon-peach">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 2v20M8 5h8M7 9h10M8 13h8M6 17h12" />
+                  </svg>
+                </div>
+                <span class="mini-status-chip moderate" id="spinalLoadChip">Moderate</span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Spinal Stress Load</span>
+                <div class="metric-value-row">
+                  <span class="metric-main-value" id="spinalLoadValue">28.6<small>lbs</small></span>
+                  <span class="metric-sub-trend" id="spinalTrend">Safe &lt;18</span>
+                </div>
+
+                <!-- 3-tier cervical strain gauge with micro-ticks -->
+                <div class="strain-level-bar" title="Cervical Load Level">
+                  <span class="strain-seg seg-low active" id="strainSegLow" title="Normal: &lt;18 lbs"></span>
+                  <span class="strain-seg seg-med active" id="strainSegMed" title="Moderate: 18-35 lbs"></span>
+                  <span class="strain-seg seg-high" id="strainSegHigh" title="High: &gt;35 lbs"></span>
+                </div>
+                <div class="gauge-axis-labels">
+                  <span>0</span>
+                  <span>18</span>
+                  <span>35+</span>
+                </div>
+                <span class="metric-hint" id="spinalLoadHint">Cervical strain within moderate limit</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Torso Inclination -->
+            <div class="metric-card" id="cardTorsoTilt">
+              <div class="metric-top">
+                <div class="metric-icon-squircle icon-blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="3" x2="12" y2="12" />
+                    <line x1="12" y1="12" x2="18.5" y2="15.5" />
+                  </svg>
+                </div>
+                <span class="mini-delta-chip warning" id="torsoDeltaChip">+9&deg; Over</span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Torso Inclination</span>
+                <div class="metric-value-row">
+                  <span class="metric-main-value" id="torsoTiltValue">19&deg;<small>tilt</small></span>
+                  <span class="metric-sub-trend" id="torsoTargetLabel">Goal: 10&deg;</span>
+                </div>
+
+                <!-- Precision Inclinometer Gauge with Target Pin -->
+                <div class="inclinometer-track">
+                  <div class="inclinometer-fill warning" id="torsoMeterFill" style="width: 63%;"></div>
+                  <div class="inclinometer-pin" style="left: 33%;" title="10° Optimal Baseline"></div>
+                </div>
+                <div class="gauge-axis-labels">
+                  <span>0&deg;</span>
+                  <span class="axis-highlight">10&deg; Goal</span>
+                  <span>45&deg;</span>
+                </div>
+                <span class="metric-hint warning" id="torsoTiltHint">Exceeds 10&deg; target threshold</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Upright Session Time with Circular Progress Ring -->
+            <div class="metric-card with-ring" id="cardUprightTime">
+              <div class="metric-top">
+                <div class="metric-icon-squircle icon-sage">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <span class="mini-status-chip good">Target: 45m</span>
+              </div>
+              <div class="metric-body with-ring-layout">
+                <div class="ring-info-col">
+                  <span class="metric-label">Upright Time</span>
+                  <span class="metric-main-value" id="goodTimeValue">42<small>m</small></span>
+                  <span class="metric-hint success" id="uprightPaceHint">93% daily goal met</span>
+                </div>
+                <div class="circular-progress-wrap">
+                  <svg viewBox="0 0 48 48" class="progress-ring">
+                    <circle class="ring-bg" cx="24" cy="24" r="19"></circle>
+                    <circle class="ring-fill" id="progressRingFill" cx="24" cy="24" r="19" stroke-dasharray="119.38"
+                      stroke-dashoffset="8.36"></circle>
+                  </svg>
+                  <span class="ring-center-text">93%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Slouch Incidents -->
+            <div class="metric-card" id="cardSlouchIncidents">
+              <div class="metric-top">
+                <div class="metric-icon-squircle icon-amber">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                </div>
+                <span class="mini-status-chip streak">🔥 4d Streak</span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Slouch Alerts</span>
+                <div class="metric-value-row">
+                  <span class="metric-main-value" id="slouchCountValue">2<small>alerts</small></span>
+                  <span class="metric-sub-trend">Low Frequency</span>
+                </div>
+
+                <!-- Session Timeline Beads (Morning, Mid-day, Afternoon, Evening) -->
+                <div class="timeline-beads-wrap" title="Daily Session Slouch Log">
+                  <div class="bead-slot active" title="Alert at 09:14 AM"><span class="bead-dot"></span><span class="bead-lbl">9A</span></div>
+                  <div class="bead-slot active" title="Alert at 11:42 AM"><span class="bead-dot"></span><span class="bead-lbl">12P</span></div>
+                  <div class="bead-slot clean" title="Clean Posture 02:00 PM"><span class="bead-dot"></span><span class="bead-lbl">3P</span></div>
+                  <div class="bead-slot clean" title="Clean Posture 05:00 PM"><span class="bead-dot"></span><span class="bead-lbl">6P</span></div>
+                </div>
+                <span class="metric-hint success">Safe posture zone kept</span>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- Weekly History Trends (7 Day Bar Chart with Baseline Goal) -->
+          <section class="weekly-trend-card">
+            <div class="trend-header">
+              <div class="trend-title-group">
+                <span class="trend-badge-sub">WEEKLY TELEMETRY</span>
+                <span class="trend-title">Posture History &amp; Slouch Trends</span>
+              </div>
+              <span class="trend-avg-badge">Avg. 81% Upright</span>
+            </div>
+
+            <!-- Mini 7-day Bar Chart with Ambient Glow and Baseline Guideline -->
+            <div class="chart-container-relative">
+              <div class="chart-goal-line" title="80% Optimal Target Baseline">
+                <span class="goal-line-label">80% Target</span>
+              </div>
+              <div class="mini-bar-chart">
+                <div class="bar-col" data-pct="65%">
+                  <span class="bar-pct">65%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 65%;"></div>
+                  </div>
+                  <span class="bar-day">Mon</span>
+                </div>
+                <div class="bar-col" data-pct="78%">
+                  <span class="bar-pct">78%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 78%;"></div>
+                  </div>
+                  <span class="bar-day">Tue</span>
+                </div>
+                <div class="bar-col" data-pct="84%">
+                  <span class="bar-pct">84%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 84%;"></div>
+                  </div>
+                  <span class="bar-day">Wed</span>
+                </div>
+                <div class="bar-col active" data-pct="92%">
+                  <span class="bar-pct active-pct">92%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill active-fill" style="height: 92%;"></div>
+                  </div>
+                  <span class="bar-day">Thu</span>
+                </div>
+                <div class="bar-col" data-pct="55%">
+                  <span class="bar-pct">55%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 55%;"></div>
+                  </div>
+                  <span class="bar-day">Fri</span>
+                </div>
+                <div class="bar-col" data-pct="70%">
+                  <span class="bar-pct">70%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 70%;"></div>
+                  </div>
+                  <span class="bar-day">Sat</span>
+                </div>
+                <div class="bar-col" data-pct="60%">
+                  <span class="bar-pct">60%</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="height: 60%;"></div>
+                  </div>
+                  <span class="bar-day">Sun</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- AI Prognosis & Gemini Biomechanical Insight Card -->
+          <section class="ai-prognosis-card">
+            <div class="ai-card-glow"></div>
+            <div class="ai-card-top">
+              <div class="ai-icon-shield">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M12 2L15 8.5L22 9.5L17 14.5L18.5 21.5L12 18L5.5 21.5L7 14.5L2 9.5L9 8.5L12 2Z" />
+                </svg>
+              </div>
+              <div class="ai-card-text">
+                <div class="ai-tag-row">
+                  <span class="ai-badge">&#10022; AI ERGONOMIST</span>
+                  <span class="ai-sub-tag">Prognosis: +15% Alignment</span>
+                </div>
+                <h4 class="ai-heading">Gemini Biomechanical Insight</h4>
+                <p class="ai-desc">"Peak slouch occurs around 9:00 AM due to desk height. Raising monitor by 2.5cm will
+                  alleviate 8.2 lbs cervical tension."</p>
+              </div>
+            </div>
+            <button class="ai-action-btn" id="generateAdviceBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>Ask Ergonomist Advice</span>
+            </button>
+          </section>
+
+        </div>
+
+        <!-- ================= TAB 2: HISTORY ================= -->
+        <div class="tab-view" id="tabHistory">
+          <section class="placeholder-card">
+            <h3>Full Telemetry History</h3>
+            <p>Select any date from the top calendar strip to view time-stamped slouch logs, sensor packet recordings,
+              and cloud backups.</p>
+          </section>
+        </div>
+
+        <!-- ================= TAB 3: POD DEVICE ================= -->
+        <div class="tab-view" id="tabDevice">
+          <section class="placeholder-card">
+            <h3>Posture+ Pod Hardware</h3>
+            <p>BLE Device ID: <code>POD-71-BLE-A8F</code><br>Firmware: v2.4.1<br>Vibration Motor: Gentle (Level 2)</p>
+          </section>
+        </div>
+
+        <!-- ================= TAB 4: PROFILE ================= -->
+        <div class="tab-view" id="tabProfile">
+          <section class="placeholder-card">
+            <h3>User Profile &amp; Targets</h3>
+            <p>Cloud Sync Account: <code>mohit@example.com</code><br>Streak: 4 Days Active</p>
+          </section>
+        </div>
+
+      </div>
+
+      <!-- Compact Floating Pill Navigation Dock (Expandable on Active Tab) -->
+      <nav class="bottom-dock-wrapper">
+        <div class="bottom-dock">
+
+          <button class="dock-tab active" data-tab="tabCockpit" aria-label="Cockpit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="tab-title">Home</span>
+          </button>
+
+          <button class="dock-tab" data-tab="tabHistory" aria-label="History">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="tab-title">History</span>
+          </button>
+
+          <button class="dock-tab" data-tab="tabDevice" aria-label="Device">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="4" ry="4"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+            <span class="tab-title">Pod</span>
+          </button>
+
+          <button class="dock-tab" data-tab="tabProfile" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="tab-title">Profile</span>
+          </button>
+
+        </div>
+      </nav>
+
+    </main>
+  </div>
+
+  <script src="app.js?v=2.1.0"></script>
+</body>
+
+</html>

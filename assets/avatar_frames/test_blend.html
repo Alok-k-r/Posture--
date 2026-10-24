@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Avatar Blend Test</title>
+<style>
+  body { background: #FAF6F0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+  .card { background: #FFFFFF; border: 1.5px solid #F5DCD1; border-radius: 34px; padding: 26px; box-shadow: 0 20px 50px rgba(216,104,67,0.15); text-align: center; }
+  .disk { width: 226px; height: 226px; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #FFFFFF 0%, #FDF7F3 68%, #F7EAE3 100%); margin: 0 auto 20px auto; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(216,104,67,0.18); }
+  .stage { width: 142px; height: 142px; position: relative; transform-origin: 54% 96%; }
+  .frame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; transition: opacity 0.08s ease-out; }
+  .slider-box { width: 280px; margin: 10px auto; }
+  input[type=range] { width: 100%; accent-color: #D86843; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2 id="lbl" style="color: #D86843; margin-top: 0;">Angle: 71&deg;</h2>
+    <div class="disk">
+      <div class="stage" id="stage">
+        <img src="posture_stage_90.png" class="frame" id="f90">
+        <img src="posture_stage_80.png" class="frame" id="f80">
+        <img src="posture_stage_71.png" class="frame" id="f71">
+        <img src="posture_stage_60.png" class="frame" id="f60">
+        <img src="posture_stage_45.png" class="frame" id="f45">
+      </div>
+    </div>
+    <div class="slider-box">
+      <input type="range" id="rng" min="45" max="90" value="71">
+    </div>
+  </div>
+
+  <script>
+    const rng = document.getElementById('rng');
+    const lbl = document.getElementById('lbl');
+    const stage = document.getElementById('stage');
+    const frames = [
+      { angle: 90, el: document.getElementById('f90') },
+      { angle: 80, el: document.getElementById('f80') },
+      { angle: 71, el: document.getElementById('f71') },
+      { angle: 60, el: document.getElementById('f60') },
+      { angle: 45, el: document.getElementById('f45') }
+    ];
+
+    function update(val) {
+      lbl.innerHTML = 'Angle: ' + val + '&deg;';
+      const a = parseFloat(val);
+      
+      // Micro tilt
+      const tilt = (90 - a) * -0.04;
+      const yShift = (90 - a) * 0.05;
+      stage.style.transform = `rotate(${tilt}deg) translateY(${yShift}px)`;
+
+      // Find segment
+      for (let i = 0; i < frames.length - 1; i++) {
+        const high = frames[i];
+        const low = frames[i + 1];
+        if (a <= high.angle && a >= low.angle) {
+          const t = (a - low.angle) / (high.angle - low.angle);
+          // Set opacities with smooth sine / hermite curve
+          frames.forEach(f => {
+            if (f === high) {
+              f.el.style.opacity = Math.sin(t * Math.PI / 2);
+            } else if (f === low) {
+              f.el.style.opacity = Math.cos(t * Math.PI / 2);
+            } else {
+              f.el.style.opacity = 0;
+            }
+          });
+          break;
+        }
+      }
+    }
+
+    rng.addEventListener('input', (e) => update(e.target.value));
+    update(71);
+  </script>
+</body>
+</html>

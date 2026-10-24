@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Posture Scrub Test</title>
+<style>
+  body { background: #FAF3EB; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+  .card { background: #FFF; padding: 24px; border-radius: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center; }
+  .circle-frame { width: 280px; height: 280px; border-radius: 50%; overflow: hidden; position: relative; margin: 0 auto 20px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .circle-frame img { position: absolute; top: -10px; left: -110px; width: 500px; height: auto; display: none; }
+  .circle-frame img.active { display: block; }
+  .slider-box { width: 260px; margin: 0 auto; }
+  input[type=range] { width: 100%; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Dynamic Posture Frame Scrub</h2>
+    <div class="circle-frame">
+      <img id="f4" src="raw_frame_4.png" class="active" alt="90 deg">
+      <img id="f3" src="raw_frame_3.png" alt="80 deg">
+      <img id="f2" src="raw_frame_2.png" alt="71 deg">
+      <img id="f5" src="raw_frame_5.png" alt="60 deg">
+      <img id="f1" src="raw_frame_1.png" alt="45 deg">
+    </div>
+    <div class="slider-box">
+      <label id="valLabel" style="font-weight: 800; font-size: 1.3rem;">90&deg; - Optimal</label><br><br>
+      <input type="range" id="scrubber" min="45" max="90" value="90">
+    </div>
+  </div>
+
+  <script>
+    const slider = document.getElementById('scrubber');
+    const label = document.getElementById('valLabel');
+    const imgs = {
+      90: document.getElementById('f4'),
+      80: document.getElementById('f3'),
+      71: document.getElementById('f2'),
+      60: document.getElementById('f5'),
+      45: document.getElementById('f1')
+    };
+
+    slider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      let activeImg = imgs[90];
+      let desc = '90° - Upright Optimal';
+
+      if (val >= 85) {
+        activeImg = imgs[90];
+        desc = val + '° - Upright Optimal';
+      } else if (val >= 76) {
+        activeImg = imgs[3];
+        desc = val + '° - Good Alignment';
+      } else if (val >= 66) {
+        activeImg = imgs[71];
+        desc = val + '° - Mild Slouch';
+      } else if (val >= 54) {
+        activeImg = imgs[60];
+        desc = val + '° - Slouch Alert';
+      } else {
+        activeImg = imgs[45];
+        desc = val + '° - Severe Slouch';
+      }
+
+      Object.values(imgs).forEach(img => img.classList.remove('active'));
+      activeImg.classList.add('active');
+      label.textContent = desc;
+    });
+  </script>
+</body>
+</html>
